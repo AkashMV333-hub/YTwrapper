@@ -1,4 +1,3 @@
-// src/components/RecommendedVideos.jsx
 import React, { useEffect, useState } from 'react';
 import { channelCategories } from '../data/channelCategories';
 import axios from 'axios';
@@ -8,6 +7,14 @@ const API_KEY = 'AIzaSyBEUjNUkuYf3OLyokSE4wP2Wa8mNxeVF8k';
 const getRandomItems = (arr, count) => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
+};
+
+// Parse ISO 8601 YouTube duration to seconds
+const parseDurationToSeconds = (isoDuration) => {
+  const match = isoDuration.match(/PT(?:(\d+)M)?(?:(\d+)S)?/);
+  const minutes = parseInt(match?.[1] || '0', 10);
+  const seconds = parseInt(match?.[2] || '0', 10);
+  return minutes * 60 + seconds;
 };
 
 const RecommendedVideos = ({ category }) => {
@@ -20,6 +27,7 @@ const RecommendedVideos = ({ category }) => {
 
       const allVideos = [];
 
+      // Step 1: Get recent videos from selected channels
       for (const id of selectedChannels) {
         try {
           const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
@@ -39,7 +47,33 @@ const RecommendedVideos = ({ category }) => {
         }
       }
 
-      const randomVideos = getRandomItems(allVideos, Math.min(15, allVideos.length));
+      // Step 2: Get durations from `videos` endpoint
+      const videoIds = allVideos.map((vid) => vid.id.videoId).filter(Boolean);
+      const durationMap = {};
+
+      try {
+        const res = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+          params: {
+            key: API_KEY,
+            id: videoIds.join(','),
+            part: 'contentDetails',
+            maxResults: 50,
+          },
+        });
+
+        res.data.items.forEach((item) => {
+          durationMap[item.id] = parseDurationToSeconds(item.contentDetails.duration);
+        });
+      } catch (err) {
+        console.error('Error fetching durations:', err);
+      }
+
+      // Step 3: Filter out Shorts (< 60s)
+      const nonShortVideos = allVideos.filter(
+        (vid) => durationMap[vid.id.videoId] >= 60
+      );
+
+      const randomVideos = getRandomItems(nonShortVideos, Math.min(15, nonShortVideos.length));
       setVideos(randomVideos);
     };
 
@@ -84,3 +118,4 @@ const RecommendedVideos = ({ category }) => {
 };
 
 export default RecommendedVideos;
+
