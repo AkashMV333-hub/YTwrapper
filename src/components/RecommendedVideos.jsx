@@ -39,7 +39,7 @@ const RecommendedVideos = ({ category }) => {
         }
       }
 
-      const randomVideos = getRandomItems(allVideos, Math.min(6, allVideos.length));
+      const randomVideos = getRandomItems(allVideos, Math.min(15, allVideos.length));
       setVideos(randomVideos);
     };
 
