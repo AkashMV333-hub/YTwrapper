@@ -50,29 +50,18 @@ const RecommendedVideos = ({ category }) => {
     <div>
       <h2 className="text-xl font-semibold mb-3">Recommended for You</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {videos.map((vid) => {
-          const videoId = vid.id.videoId;
-          const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-
-          return (
-            <a
-              key={videoId}
-              href={`https://www.youtube.com/watch?v=${videoId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded overflow-hidden shadow"
-            >
-              <img
+        {videos.map((vid) => (
+          <div key={vid.id.videoId} className="bg-white p-3 rounded shadow">
+             <img
                 src={thumbnailUrl}
                 alt="Video thumbnail"
                 className="w-full h-48 object-cover"
                 onError={(e) =>
                   (e.target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`)
-                }
-              />
-            </a>
-          );
-        })}
+                }/>
+            <p className="mt-2 font-medium">{vid.snippet.title}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
