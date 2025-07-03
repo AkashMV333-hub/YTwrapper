@@ -58,7 +58,7 @@ const RecommendedVideos = ({ category }) => {
           return (
             <div
               key={videoId}
-              className="bg-white p-2 rounded-lg shadow hover:shadow-lg transition"
+              className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition"
             >
               <a
                 href={`https://www.youtube.com/watch?v=${videoId}`}
@@ -72,7 +72,7 @@ const RecommendedVideos = ({ category }) => {
                   onError={(e) => (e.target.src = fallbackUrl)}
                 />
               </a>
-              <p className="mt-2 text-sm font-medium line-clamp-2">
+              <p className="mt-2 p-2 text-md font-medium line-clamp-2">
                 {vid.snippet.title}
               </p>
             </div>
