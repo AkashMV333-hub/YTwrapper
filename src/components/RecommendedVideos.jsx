@@ -9,7 +9,6 @@ const getRandomItems = (arr, count) => {
   return shuffled.slice(0, count);
 };
 
-// Parse ISO 8601 YouTube duration to seconds
 const parseDurationToSeconds = (isoDuration) => {
   const match = isoDuration.match(/PT(?:(\d+)M)?(?:(\d+)S)?/);
   const minutes = parseInt(match?.[1] || '0', 10);
@@ -19,6 +18,7 @@ const parseDurationToSeconds = (isoDuration) => {
 
 const RecommendedVideos = ({ category }) => {
   const [videos, setVideos] = useState([]);
+  const [playingVideoId, setPlayingVideoId] = useState(null);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -27,7 +27,6 @@ const RecommendedVideos = ({ category }) => {
 
       const allVideos = [];
 
-      // Step 1: Get recent videos from selected channels
       for (const id of selectedChannels) {
         try {
           const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
@@ -47,7 +46,6 @@ const RecommendedVideos = ({ category }) => {
         }
       }
 
-      // Step 2: Get durations from `videos` endpoint
       const videoIds = allVideos.map((vid) => vid.id.videoId).filter(Boolean);
       const durationMap = {};
 
@@ -68,9 +66,8 @@ const RecommendedVideos = ({ category }) => {
         console.error('Error fetching durations:', err);
       }
 
-      // Step 3: Filter out Shorts (< 60s)
       const nonShortVideos = allVideos.filter(
-        (vid) => durationMap[vid.id.videoId] >= 120
+        (vid) => durationMap[vid.id.videoId] >= 60
       );
 
       const randomVideos = getRandomItems(nonShortVideos, Math.min(15, nonShortVideos.length));
@@ -93,19 +90,26 @@ const RecommendedVideos = ({ category }) => {
             <div
               key={videoId}
               className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition"
+              onClick={() => setPlayingVideoId(videoId)}
             >
-              <a
-                href={`https://www.youtube.com/watch?v=${videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              {playingVideoId === videoId ? (
+                <iframe
+                  width="100%"
+                  height="200"
+                  src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                  title={vid.snippet.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded"
+                />
+              ) : (
                 <img
                   src={thumbnailUrl}
                   alt={vid.snippet.title}
-                  className="w-full h-48 object-cover rounded"
+                  className="w-full h-48 object-cover rounded cursor-pointer"
                   onError={(e) => (e.target.src = fallbackUrl)}
                 />
-              </a>
+              )}
               <p className="mt-2 p-2 text-md font-medium line-clamp-2">
                 {vid.snippet.title}
               </p>
@@ -118,4 +122,5 @@ const RecommendedVideos = ({ category }) => {
 };
 
 export default RecommendedVideos;
+
 
