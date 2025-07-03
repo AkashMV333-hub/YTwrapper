@@ -64,7 +64,7 @@ const RecommendedVideos = ({ category }) => {
         console.error('Error fetching durations', err);
       }
 
-      const filtered = allVideos.filter((v) => durations[v.id.videoId] >= 60);
+      const filtered = allVideos.filter((v) => durations[v.id.videoId] >= 180);
       const selected = getRandomItems(filtered, Math.min(15, filtered.length));
       setVideos(selected);
     };
