@@ -50,18 +50,34 @@ const RecommendedVideos = ({ category }) => {
     <div>
       <h2 className="text-xl font-semibold mb-3">Recommended for You</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {videos.map((vid) => (
-          <div key={vid.id.videoId} className="bg-white p-3 rounded shadow">
-             <img
-                src={thumbnailUrl}
-                alt="Video thumbnail"
-                className="w-full h-48 object-cover"
-                onError={(e) =>
-                  (e.target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`)
-                }/>
-            <p className="mt-2 font-medium">{vid.snippet.title}</p>
-          </div>
-        ))}
+        {videos.map((vid) => {
+          const videoId = vid.id.videoId;
+          const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+          const fallbackUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+          return (
+            <div
+              key={videoId}
+              className="bg-white p-2 rounded-lg shadow hover:shadow-lg transition"
+            >
+              <a
+                href={`https://www.youtube.com/watch?v=${videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={thumbnailUrl}
+                  alt={vid.snippet.title}
+                  className="w-full h-48 object-cover rounded"
+                  onError={(e) => (e.target.src = fallbackUrl)}
+                />
+              </a>
+              <p className="mt-2 text-sm font-medium line-clamp-2">
+                {vid.snippet.title}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
