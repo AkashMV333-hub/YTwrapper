@@ -70,7 +70,7 @@ const RecommendedVideos = ({ category }) => {
 
       // Step 3: Filter out Shorts (< 60s)
       const nonShortVideos = allVideos.filter(
-        (vid) => durationMap[vid.id.videoId] >= 60
+        (vid) => durationMap[vid.id.videoId] >= 120
       );
 
       const randomVideos = getRandomItems(nonShortVideos, Math.min(15, nonShortVideos.length));
