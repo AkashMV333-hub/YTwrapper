@@ -8,18 +8,20 @@ const App = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   return (
-    <div className="min-h-screen p-4 bg-gray-100">
+    <div className="min-h-screen md:p-4 bg-green-200">
       {!selectedCategory ? (
         <CategorySelector onSelect={setSelectedCategory} />
       ) : (
         <>
+          <RecommendedVideos category={selectedCategory} />
+          <div className='flex bg-green-200 vw-100 justify-center items-center'>
           <button
             onClick={() => setSelectedCategory(null)}
-            className="mb-4 px-4 py-2 bg-blue-600 text-white rounded"
+            className="m-5 px-8 py-4 bg-yellow-300 text-black text-lg rounded-lg"
           >
             Change Category
           </button>
-          <RecommendedVideos category={selectedCategory} />
+        </div>
         </>
       )}
     </div>
