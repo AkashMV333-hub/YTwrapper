@@ -89,8 +89,8 @@ const RecommendedVideos = ({ category }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-3">Recommended for You</h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+      <div className="grid md:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {videos.map((vid) => {
           const videoId = vid.id.videoId;
           const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
@@ -99,7 +99,7 @@ const RecommendedVideos = ({ category }) => {
           return (
             <div
               key={videoId}
-              className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition"
+              className="bg-white shadow hover:shadow-lg transition pb-2.5"
               onClick={() => setPlayingVideoId(videoId)}
             >
               {playingVideoId === videoId ? (
@@ -116,11 +116,11 @@ const RecommendedVideos = ({ category }) => {
                 <img
                   src={thumbnailUrl}
                   alt={vid.snippet.title}
-                  className="w-full h-48 object-cover rounded cursor-pointer"
+                  className="w-full h-48 object-cover cursor-pointer"
                   onError={(e) => (e.target.src = fallbackUrl)}
                 />
               )}
-              <p className="mt-2 p-2 text-md font-medium line-clamp-2">
+              <p className="mt-1 p-2 text-md font-medium line-clamp-2">
                 {vid.snippet.title}
               </p>
             </div>
