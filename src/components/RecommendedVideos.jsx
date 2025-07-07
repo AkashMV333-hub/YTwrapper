@@ -116,7 +116,7 @@ const RecommendedVideos = ({ category }) => {
                 <img
                   src={thumbnailUrl}
                   alt={vid.snippet.title}
-                  className="w-full h-48 object-cover cursor-pointer"
+                  className="w-full h-55 object-cover cursor-pointer"
                   onError={(e) => (e.target.src = fallbackUrl)}
                 />
               )}
