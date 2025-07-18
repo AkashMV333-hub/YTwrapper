@@ -13,7 +13,7 @@ const App = () => {
         <CategorySelector onSelect={setSelectedCategory} />
       ) : (
         <>
-          <RecommendedVideos category={selectedCategory} />
+          <RecommendedVideos category={selectedCategory} setSelectedCategory={setSelectedCategory} />
         </>
       )}
     </div>
