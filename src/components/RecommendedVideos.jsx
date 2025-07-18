@@ -20,17 +20,18 @@ const RecommendedVideos = ({ category }) => {
   const [videos, setVideos] = useState([]);
   const [playingVideoId, setPlayingVideoId] = useState(null);
 
-  useEffect(() => {
-  const fetchVideos = async () => {
-    // Check localStorage cache first
-    const cached = localStorage.getItem(`recommended_${category}`);
-    if (cached) {
-      setVideos(JSON.parse(cached));
+  const fetchVideos = async (forceRefresh = false) => {
+    const cacheKey = `recommended_${category}`;
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached && !forceRefresh) {
+      const parsed = JSON.parse(cached);
+      setVideos(parsed.data);
       return;
     }
 
     const channelIds = channelCategories[category];
-    const selectedChannels = getRandomItems(channelIds, Math.min(3, channelIds.length));
+    const selectedChannels = getRandomItems(channelIds, Math.min(10, channelIds.length));
     const allVideos = [];
 
     for (const id of selectedChannels) {
@@ -78,18 +79,22 @@ const RecommendedVideos = ({ category }) => {
 
     const randomVideos = getRandomItems(nonShortVideos, Math.min(15, nonShortVideos.length));
 
-    // Cache in localStorage
-    localStorage.setItem(`recommended_${category}`, JSON.stringify(randomVideos));
+    // Store in localStorage with timestamp
+    localStorage.setItem(cacheKey, JSON.stringify({
+      data: randomVideos,
+      timestamp: Date.now(),
+    }));
+
     setVideos(randomVideos);
   };
 
-  fetchVideos();
-}, [category]);
+  useEffect(() => {
+    fetchVideos(false);
+  }, [category]);
 
 
   return (
     <div>
-
       <div className="grid md:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {videos.map((vid) => {
           const videoId = vid.id.videoId;
@@ -126,6 +131,26 @@ const RecommendedVideos = ({ category }) => {
             </div>
           );
         })}
+      </div>
+      <div className='flex bg-green-200 vw-100 justify-center items-center'>
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className="m-5 px-8 py-4 bg-yellow-300 text-black text-lg rounded-lg"
+         >
+          Change Category
+        </button>
+        <button
+          onClick={() => fetchVideos(true)}
+          style={{
+            padding: "8px 16px",
+            borderRadius: "6px",
+            border: "1px solid #ccc",
+            background: "#f5f5f5",
+            cursor: "pointer"
+          }}
+        >
+          🔄 Refresh
+        </button>
       </div>
     </div>
   );
