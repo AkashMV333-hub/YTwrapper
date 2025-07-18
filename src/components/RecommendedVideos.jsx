@@ -16,7 +16,7 @@ const parseDurationToSeconds = (isoDuration) => {
   return minutes * 60 + seconds;
 };
 
-const RecommendedVideos = ({ category }) => {
+const RecommendedVideos = ({ category, setSelectedCategory }) => {
   const [videos, setVideos] = useState([]);
   const [playingVideoId, setPlayingVideoId] = useState(null);
 
