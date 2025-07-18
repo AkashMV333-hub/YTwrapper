@@ -8,7 +8,7 @@ const App = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   return (
-    <div className="min-h-screen md:p-4 bg-green-200">
+    <div className="min-h-screen m-10 md:p-4 bg-white">
       {!selectedCategory ? (
         <CategorySelector onSelect={setSelectedCategory} />
       ) : (

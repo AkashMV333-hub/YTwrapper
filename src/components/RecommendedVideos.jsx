@@ -132,22 +132,16 @@ const RecommendedVideos = ({ category, setSelectedCategory }) => {
           );
         })}
       </div>
-      <div className='flex bg-green-200 vw-100 justify-center items-center'>
+      <div className='flex bg-amber-400 vw-100 justify-center items-center'>
         <button
           onClick={() => setSelectedCategory(null)}
-          className="m-5 px-8 py-4 bg-yellow-300 text-black text-lg rounded-lg"
+          className="m-5 px-8 py-4 bg-black text-white text-lg rounded-lg"
          >
           Change Category
         </button>
         <button
           onClick={() => fetchVideos(true)}
-          style={{
-            padding: "8px 16px",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-            background: "#f5f5f5",
-            cursor: "pointer"
-          }}
+          className=''
         >
           🔄 Refresh
         </button>
